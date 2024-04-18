@@ -28,6 +28,16 @@ namespace Fiap.Fase1.NET8.Logging
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
         {
             var message = $"Log de Execução {logLevel}: {eventId} - {formatter(state, exception)}";
+
+            var pathFile = @$"{Environment.CurrentDirectory}\logs\LOG-{DateTime.Now:yyyy-MM-dd}.log";
+            if  (!File.Exists(pathFile)) 
+            { 
+                Directory.CreateDirectory(Path.GetDirectoryName(pathFile));
+                File.Create(pathFile).Dispose();
+            }
+            using StreamWriter sw = new(pathFile,true);
+            sw.WriteLine(message);
+            sw.Close();
             Console.WriteLine(message);
                  
         }
